@@ -3,6 +3,7 @@ package com.example.a24012011117_mad_practical_5
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -107,7 +108,13 @@ fun RegisterScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Already Have an Account?", fontSize = 18.sp)
+            Text(
+                text = "Already Have an Account?",
+                fontSize = 18.sp,
+                modifier = Modifier.clickable {
+                    navController.navigate("login")
+                }
+            )
             Spacer(modifier = Modifier.width(20.dp))
             TextButton(
                 onClick = {

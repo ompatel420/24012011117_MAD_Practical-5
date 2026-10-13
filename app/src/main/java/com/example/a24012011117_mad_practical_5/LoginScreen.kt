@@ -3,6 +3,7 @@ package com.example.a24012011117_mad_practical_5
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -105,7 +106,12 @@ fun LoginScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Don't Have an Account?")
+            Text(
+                text = "Don't Have an Account?",
+                modifier = Modifier.clickable {
+                    navController.navigate("register")
+                }
+            )
             Spacer(modifier = Modifier.width(20.dp))
             TextButton(
                 onClick = {

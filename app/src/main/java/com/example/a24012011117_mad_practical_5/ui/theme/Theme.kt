@@ -1,6 +1,6 @@
 package com.example.a24012011117_mad_practical_5.ui.theme
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +33,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+@SuppressLint("ComposableNaming")
 @Composable
 fun _24012011117_MAD_Practical5Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),

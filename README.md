@@ -10,6 +10,12 @@ Create an Android Application that includes **Login** and **Registration** scree
 This application demonstrates modern Android UI development using **Jetpack Compose** (Material 3) adhering to Unidirectional Data Flow (UDF) state hoisting principles. The app provides a smooth, declarative transition between authentication flows (Login and Registration) with robust input validation and reusable components.
 
 ---
+# Screenshots
+
+|  |  |  |
+| :---: | :---: | :---: |
+| <img src="Screenshots/01.png" width="250"> | <img src="Screenshots/02.png" width="250"> | <img src="Screenshots/03.png" width="250"> |
+
 
 ## 📁 Detailed Project Structure
 
@@ -44,6 +50,18 @@ app/src/main/java/com/example/a24012011117_mad_practical_5/
    - Manages text field states reactively across user interactions.
 
 ---
+## Features
+
+- Login screen with email and password fields.
+- Registration screen with name, phone number, city, email, password, and confirm-password fields.
+- Reusable `FormField` composable for consistent input fields.
+- Password masking using `PasswordVisualTransformation`.
+- Numeric keyboard and digit-only input filtering for the phone-number field.
+- Screen navigation using Navigation Compose.
+- Scrollable forms to support smaller screens.
+- Material 3 components, a custom theme, and a university logo image.
+- Toast messages when Login or Register is tapped.
+
 
 ## 🚀 Detailed Working & User Flow
 
@@ -115,26 +133,93 @@ fun FormField(
     }
 }
 ```
+## Important Concepts Explained
+
+### 1. Jetpack Compose and declarative UI
+
+**Jetpack Compose** is Android's modern toolkit for building native interfaces with Kotlin. Instead of creating most of the interface in XML layouts, you describe the UI in Kotlin using composable functions. Compose updates the screen when the state used by the UI changes.
+
+A function annotated with `@Composable` can describe a part of the interface, such as a screen, text label, button, or form field.
+
+### 2. `setContent` and `MainActivity`
+
+`MainActivity.kt` is the app's entry point. In `onCreate()`, `setContent { ... }` starts the Compose UI. The app theme is applied around a `Surface`, and `AppNavigation` is displayed inside it. `enableEdgeToEdge()` enables edge-to-edge window layout, while `safeDrawingPadding()` helps keep content within safe drawing areas.
+
+### 3. State management: `remember` and `mutableStateOf`
+
+The Login screen stores the email and password, while the Registration screen stores the name, phone number, city, email, password, and confirmation password.
+
+```kotlin
+var email by remember { mutableStateOf("") }
+```
+
+- `mutableStateOf("")` creates observable state with an initial empty string.
+- `remember` retains that state across recompositions while the composable remains in the composition.
+- `by` delegates access to the stored value, so the variable can be read and assigned directly.
+- When the state changes, Compose recomposes the parts of the UI that depend on it.
+
+### 4. Reusable composables and state hoisting
+
+`FormField.kt` defines a reusable `FormField` composable. Instead of writing a separate text field implementation for every form entry, the screens call the same composable with different labels and settings.
+
+The field receives its current value (`textState`) and a callback (`onTextChange`) from its parent screen. This is an example of **state hoisting**: the screen owns the state, and the reusable field reports user changes through a callback. This keeps the UI component reusable and easier to maintain.
+
+### 5. `OutlinedTextField` and keyboard options
+
+`OutlinedTextField` displays the input box with a label. `KeyboardOptions` requests a suitable keyboard type:
+
+- `KeyboardType.Email` for the Email field.
+- `KeyboardType.Password` for password fields.
+- `KeyboardType.Number` for the Phone Number field.
+- `KeyboardType.Text` for regular text fields.
+
+The phone-number field also checks `newValue.all { it.isDigit() }` before accepting the input, so non-digit characters are rejected. The project does not currently perform full validation for email format, empty fields, password strength, or whether the two passwords match.
+
+### 6. Hiding password text
+
+When `isPasswordField` is true, `FormField` uses `PasswordVisualTransformation()`. This displays masked characters instead of showing the password as plain text. `VisualTransformation.None` is used for fields that are not password fields.
+
+### 7. Layouts and `Modifier`
+
+Compose layouts arrange the screen's elements:
+
+- `Column` places elements vertically.
+- `Row` places elements horizontally.
+- `Spacer` adds empty space between elements.
+- `Modifier.fillMaxSize()` and `fillMaxWidth()` control the available space.
+- `padding()` adds spacing around content.
+- `height()` and `width()` set dimensions.
+- `align()` positions content within its parent layout.
+- `verticalScroll(rememberScrollState())` makes the forms scrollable when their content is taller than the screen.
+
+A `Modifier` can be chained to describe layout, appearance, interaction, and other behavior for a composable.
+
+### 8. Material 3 components and cards
+
+The project uses Material 3 components such as `Button`, `TextButton`, `OutlinedTextField`, `Card`, and `MaterialTheme`. The login and registration forms are placed inside cards with padding, rounded shapes, and elevation to visually group the fields.
+
+`Theme.kt`, `Color.kt`, and `Type.kt` centralize the app's color scheme and typography. The theme can use system dark mode and Android 12+ dynamic colors when available.
+
+### 9. Navigation Compose
+
+`AppNavigation.kt` creates a navigation controller with `rememberNavController()` and defines the available screens inside `NavHost`.
+
+- **Start destination:** `login`
+- **Route `login`:** displays `LoginScreen`
+- **Route `register`:** displays `RegisterScreen`
+
+Calling `navController.navigate("register")` opens the Registration screen. Calling `navController.navigate("login")` returns to the Login screen. These routes change which composable screen is displayed without requiring a separate Activity for each screen.
+
+### 10. Toast messages
+
+A **Toast** is a brief message displayed on the screen. In this practical, tapping Login displays `Login Clicked`, and tapping Register displays `Register Clicked`. These messages demonstrate button click handling; they are not proof that login or registration succeeded.
+
+### 11. Image resources and previews
+
+The screens load the logo from `res/drawable/guni_pink_logo.png` using `painterResource()`. The `@Preview`-annotated functions in `LoginScreen.kt`, `RegisterScreen.kt`, and `FormField.kt` allow components to be previewed in Android Studio without launching the app on a device.
+
 
 ---
 
-## 🛠️ How to Build and Run
-
-1. Open the project in **Android Studio** (Koala / Ladybug or newer).
-2. Ensure Gradle sync is completed successfully.
-3. Connect an Android device or start an Android Emulator (API 24+).
-4. Click **Run (`▶`)** or execute the build task via Gradle:
-   ```bash
-   ./gradlew assembleDebug
-   ```
-
----
-
-## 🛠️ Tech Stack & Requirements
-
-- **Language**: Kotlin 2.0+
-- **UI Toolkit**: Jetpack Compose (Material 3)
-- **Navigation**: Jetpack Navigation Compose (2.8+)
-- **Build System**: Gradle 9.5 / AGP 8.7+
-- **Minimum SDK**: API 24 (Android 7.0 Nougat)
-- **Target SDK**: API 35 (Android 15)
+**Enrollment No:** 24012011117  
+**Practical:** 05
